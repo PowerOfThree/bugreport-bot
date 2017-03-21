@@ -10,4 +10,4 @@ Build  using maven:
 `mvn clean install`
 
 Run using java:
-`java -jar generated_file.jar`
+`java -jar generated_file.jar [port] token`
