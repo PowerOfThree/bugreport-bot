@@ -19,19 +19,56 @@ import static spark.Spark.*;
 public class Main {
 
     private static final Map<String, String> filter = new HashMap<>();
+    private static int port = 80;
+    private static String token;
 
     public static void main(String[] args) throws IOException {
+        if (args.length == 0) {
+            System.out.println("Error! Token was not specified.");
+            System.out.println("Usage: java -jar filename.jar [port] token");
+            System.exit(-1);
+
+        }
+
+        if (args.length > 2) {
+            System.out.println("Error! Too many arguments.");
+            System.out.println("Usage: java -jar filename.jar [port] token");
+            System.exit(-1);
+        }
+
+        if (args.length == 1) {
+            if (args[0].length() <= 2) {
+                System.out.println("This is not a token");
+                System.out.println("Stopping server.");
+                System.out.println("Usage: java -jar filename.jar [port] token");
+                System.exit(-1);
+            }
+            token = args[0];
+        } else if (args.length == 2) {
+            try {
+                port = Integer.parseInt(args[0]);
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid port.");
+                System.out.println("Stopping server.");
+                System.out.println("Usage: java -jar filename.jar [port] token");
+                System.exit(-1);
+            }
+            token = args[1];
+        }
+
+        System.out.printf("Initializing server on port %d%n" +
+                "Token: %s%n", port, token);
+
         final GitHubClient client = new GitHubClient();
-        client.setOAuth2Token("1db8cc79b8bb0299ccb39441d24294c8945ab6a6"); //bot token
+        client.setOAuth2Token(token); //bot token
         final IssueService service = new IssueService(client);
         final RepositoryService repositoryService = new RepositoryService(client);
-//        final Repository k9 = repositoryService.getRepositories().get(0);
         final Repository k9 = repositoryService.getRepository("PowerOfThree", "k-9");
         final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
         filter.put(IssueService.FILTER_STATE, IssueService.STATE_OPEN);
 
-	port(80);
+        port(port);
 
         get("/", (new Route() {
             @Override

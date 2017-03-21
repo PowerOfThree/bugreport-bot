@@ -1,8 +1,3 @@
-import java.util.Date;
-
-/**
- * Created by sagdatk on 3/18/17.
- */
 public class Report {
     private long date;
     private String thread;

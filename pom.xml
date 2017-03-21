@@ -30,7 +30,6 @@
                 </executions>
                 <configuration>
                     <descriptorRefs>
-                        <!-- This tells Maven to include all dependencies -->
                         <descriptorRef>jar-with-dependencies</descriptorRef>
                     </descriptorRefs>
                     <archive>
